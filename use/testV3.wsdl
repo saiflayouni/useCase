@@ -1,0 +1,105 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:tns="http://ws.apache.org/axis2"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  targetNamespace="http://ws.apache.org/axis2">
+
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ws.apache.org/axis2">
+            <xs:element name="AddPetRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:long"/>
+                        <xs:element name="category_id" type="xs:long"/>
+                        <xs:element name="category_name" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AddPetResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:long"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="AddPetRequest">
+        <wsdl:part name="parameters" element="tns:AddPetRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="AddPetResponse">
+        <wsdl:part name="parameters" element="tns:AddPetResponse"/>
+    </wsdl:message>
+
+    <wsdl:portType name="PetStoreProxyPortType">
+        <wsdl:operation name="mediate">
+            <wsdl:input message="tns:AddPetRequest" wsaw:Action="urn:mediate"/>
+            <wsdl:output message="tns:AddPetResponse" wsaw:Action="urn:mediateResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="PetStoreProxySoap11Binding" type="tns:PetStoreProxyPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="mediate">
+            <soap:operation soapAction="urn:mediate" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="PetStoreProxySoap12Binding" type="tns:PetStoreProxyPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="mediate">
+            <soap12:operation soapAction="urn:mediate" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="PetStoreProxyHttpBinding" type="tns:PetStoreProxyPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="mediate">
+            <http:operation location="mediate"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="PetStoreProxy">
+      <wsdl:port name="PetStoreProxyHttpSoap11Endpoint" binding="tns:PetStoreProxySoap11Binding">
+         <soap:address location="http://localhost:8290/services/PetStoreProxy.PetStoreProxyHttpSoap11Endpoint"/>
+      </wsdl:port>
+      <wsdl:port name="PetStoreProxyHttpsSoap11Endpoint" binding="tns:PetStoreProxySoap11Binding">
+         <soap:address location="https://localhost:8253/services/PetStoreProxy.PetStoreProxyHttpsSoap11Endpoint"/>
+      </wsdl:port>
+      <wsdl:port name="PetStoreProxyHttpsSoap12Endpoint" binding="tns:PetStoreProxySoap12Binding">
+         <soap12:address location="https://localhost:8253/services/PetStoreProxy.PetStoreProxyHttpsSoap12Endpoint"/>
+      </wsdl:port>
+      <wsdl:port name="PetStoreProxyHttpSoap12Endpoint" binding="tns:PetStoreProxySoap12Binding">
+         <soap12:address location="http://localhost:8290/services/PetStoreProxy.PetStoreProxyHttpSoap12Endpoint"/>
+      </wsdl:port>
+      <wsdl:port name="PetStoreProxyHttpEndpoint" binding="tns:PetStoreProxyHttpBinding">
+         <http:address location="http://localhost:8290/services/PetStoreProxy.PetStoreProxyHttpEndpoint"/>
+      </wsdl:port>
+      <wsdl:port name="PetStoreProxyHttpsEndpoint" binding="tns:PetStoreProxyHttpBinding">
+         <http:address location="https://localhost:8253/services/PetStoreProxy.PetStoreProxyHttpsEndpoint"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

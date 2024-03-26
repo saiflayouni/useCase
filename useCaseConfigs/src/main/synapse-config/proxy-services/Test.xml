@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy name="PetStoreProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <endpoint>
+            <address uri="https://petstore.swagger.io/v2/pet">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>1</progressionFactor>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+        <inSequence>
+            <property expression="//pet:id/text()" name="id" scope="default" type="STRING"/>
+            <property expression="//category/id/text()" name="categoryId" scope="default" type="STRING"/>
+            <property expression="//category/name/text()" name="categoryName" scope="default" type="STRING"/>
+            <payloadFactory media-type="json">
+                <format>{"id":$1,"category":{"id":$2,"name":"$3"}}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('id')"/>
+                    <arg evaluator="xml" expression="get-property('categoryId')"/>
+                    <arg evaluator="xml" expression="get-property('categoryName')"/>
+                </args>
+            </payloadFactory>
+            <send/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+    <publishWSDL key="conf:/custom/testV3.wsdl" preservePolicy="true"/>
+    <!-- <publishWSDL key="conf:/_system/config/custom/testV3.wsdl"/> -->
+    <!-- <publishWSDL key="conf:/custom/testV3.wsdl"/> -->
+</proxy>

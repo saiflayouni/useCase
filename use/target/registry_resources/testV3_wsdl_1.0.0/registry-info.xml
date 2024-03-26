@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><resources>
+    <item>
+        <file>testV3.wsdl</file>
+        <path>/_system/config/custom</path>
+        <mediaType>application/wsdl+xml</mediaType>
+        <properties/>
+    </item>
+</resources>
