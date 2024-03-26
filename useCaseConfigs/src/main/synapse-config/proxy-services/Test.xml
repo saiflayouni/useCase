@@ -13,15 +13,11 @@
             </address>
         </endpoint>
         <inSequence>
-            <property expression="//pet:id/text()" name="id" scope="default" type="STRING"/>
-            <property expression="//category/id/text()" name="categoryId" scope="default" type="STRING"/>
-            <property expression="//category/name/text()" name="categoryName" scope="default" type="STRING"/>
+            <property expression="//id/text()" name="id" scope="default" type="STRING"/>
             <payloadFactory media-type="json">
-                <format>{"id":$1,"category":{"id":$2,"name":"$3"}}</format>
+                <format>{"id":$1}</format>
                 <args>
                     <arg evaluator="xml" expression="get-property('id')"/>
-                    <arg evaluator="xml" expression="get-property('categoryId')"/>
-                    <arg evaluator="xml" expression="get-property('categoryName')"/>
                 </args>
             </payloadFactory>
             <send/>
