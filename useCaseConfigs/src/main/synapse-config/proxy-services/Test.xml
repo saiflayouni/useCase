@@ -20,12 +20,23 @@
                     <arg evaluator="xml" expression="get-property('id')"/>
                 </args>
             </payloadFactory>
-            <send/>
         </inSequence>
-        <outSequence/>
+        <outSequence>
+            <payloadFactory media-type="xml">
+                <format>
+                    <AddPetResponse xmlns="">
+                        <id>$1</id>
+                        <photoUrls/>
+                        <tags/>
+                    </AddPetResponse>
+                </format>
+                <args>
+                    <arg evaluator="json" expression="$.id"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </outSequence>
         <faultSequence/>
     </target>
     <publishWSDL key="conf:/custom/testV3.wsdl" preservePolicy="true"/>
-    <!-- <publishWSDL key="conf:/_system/config/custom/testV3.wsdl"/> -->
-    <!-- <publishWSDL key="conf:/custom/testV3.wsdl"/> -->
 </proxy>
