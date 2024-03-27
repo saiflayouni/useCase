@@ -22,18 +22,28 @@
             </payloadFactory>
         </inSequence>
         <outSequence>
+            <property expression="json-eval($.id)" name="id" scope="default" type="STRING"/>
+            <property expression="json-eval($.photoUrls)" name="photoUrls" scope="default" type="STRING"/>
+            <property expression="json-eval($.tags)" name="tags" scope="default" type="STRING"/>
             <payloadFactory media-type="xml">
                 <format>
-                    <AddPetResponse xmlns="">
-                        <id>$1</id>
-                        <photoUrls/>
-                        <tags/>
-                    </AddPetResponse>
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+                        <soapenv:Body>
+                            <AddPetResponse>
+                                <id>$1</id>
+                                <photoUrls>$2</photoUrls>
+                                <tags>$3</tags>
+                            </AddPetResponse>
+                        </soapenv:Body>
+                    </soapenv:Envelope>
                 </format>
                 <args>
-                    <arg evaluator="json" expression="$.id"/>
+                    <arg evaluator="xml" expression="get-property('id')"/>
+                    <arg evaluator="xml" expression="get-property('photoUrls')"/>
+                    <arg evaluator="xml" expression="get-property('tags')"/>
                 </args>
             </payloadFactory>
+            <property name="messageType" scope="axis2" type="STRING" value="application/wsdl+xml"/>
             <respond/>
         </outSequence>
         <faultSequence/>
